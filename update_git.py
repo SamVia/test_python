@@ -3,7 +3,8 @@ import os
 import streamlit as st
 import sqlite3 as sq
 import random
-import datetime
+
+
 #repo = git.Repo(r"C:\Users\ACER\Desktop\testa\test_python")
 
 
@@ -85,8 +86,8 @@ def insert_create(conn, element, name):
     conn.commit()
     return cur.lastrowid
 day = random.randint(0,31)
-timed = datetime.now()
-table_name =  f"_{timed.year+4}_{timed.month+4}_{day}"
+
+table_name =  f"_{4000}_{4}_{day}"
 db = r"/mount/src/test_python/database/test.db"
 conn = create_connection(db)
 
