@@ -80,11 +80,14 @@ def generate_str_table(name):
     return sql_create_table
 
 def insert_create(conn, element, name):
-    sql_insert = f"INSERT INTO {name}(id, velocity, day, timestamp) VALUES(?, ?, ?, ?)"
-    cur = conn.cursor()
-    cur.execute(sql_insert, (element["id"], element["velocity"], element["day"], element["timestamp"]))
-    conn.commit()
-    return cur.lastrowid
+    try:
+        sql_insert = f"INSERT INTO {name}(id, velocity, day, timestamp) VALUES(?, ?, ?, ?)"
+        cur = conn.cursor()
+        cur.execute(sql_insert, (element["id"], element["velocity"], element["day"], element["timestamp"]))
+        conn.commit()
+        return cur.lastrowid
+    except:
+        pass
 day = random.randint(0,31)
 
 table_name =  f"_{4000}_{4}_{day}"
