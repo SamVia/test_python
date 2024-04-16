@@ -1,6 +1,6 @@
 import git 
 import os
-repo = git.Repo(r"C:\Users\ACER\Desktop\testa\test_python")
+#repo = git.Repo(r"C:\Users\ACER\Desktop\testa\test_python")
 
 
 # username= "SamVia"
