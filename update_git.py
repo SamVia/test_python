@@ -45,6 +45,8 @@ def print_dir(basepath):
 basepath = os.getcwd()
 st.write(f"basepath: {basepath}")
 print_dir(basepath)
+os.chmod("/mount/src/test_python/database/test.db", 0o777)
+st.write(os.access(entry.path, os.X_OK))
 # repo.git.add(r"C:\Users\ACER\Desktop\testa\test_python\test.db")
 # repo.index.commit("pushed db")
 
