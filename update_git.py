@@ -1,7 +1,9 @@
 import git 
 import os
 import streamlit as st
-import sqlite3
+import sqlite3 as sq
+import random
+import datetime
 #repo = git.Repo(r"C:\Users\ACER\Desktop\testa\test_python")
 
 
@@ -50,12 +52,77 @@ os.chmod("/mount/src/test_python/database/test.db", 0o777)
 st.write(os.access("/mount/src/test_python/database/test.db", os.X_OK))
 
 
-conn = sqlite3.connect("/mount/src/test_python/database/test.db")
+
+def create_connection(db_file):
+    conn = None
+    try:
+        conn = sq.connect(db_file)
+        print(sq.version)
+    except:
+        pass
+    return conn
+
+def create_table(conn, table_sql):
+    try:
+        c = conn.cursor()
+        c.execute(table_sql)
+    except:
+        pass
+        
+def generate_str_table(name):
+    sql_create_table = f"CREATE TABLE IF NOT EXISTS {name} (\n"
+    sql_create_table += "id INTEGER PRIMARY KEY,\n"
+    sql_create_table += "velocity REAL NOT NULL,\n"
+    sql_create_table += "day INTEGER NOT NULL,\n"
+    sql_create_table += "timestamp TEXT NOT NULL\n"
+    sql_create_table += ");"
+    return sql_create_table
+
+def insert_create(conn, element, name):
+    sql_insert = f"INSERT INTO {name}(id, velocity, day, timestamp) VALUES(?, ?, ?, ?)"
+    cur = conn.cursor()
+    cur.execute(sql_insert, (element["id"], element["velocity"], element["day"], element["timestamp"]))
+    conn.commit()
+    return cur.lastrowid
+day = random.randint(0,31)
+timed = datetime.now()
+table_name =  f"_{timed.year+4}_{timed.month+4}_{day}"
+db = r"/mount/src/test_python/database/test.db"
+conn = create_connection(db)
+
+
+if conn is not None:
+    table = generate_str_table(table_name)
+    create_table(conn, table)
+    print("connection successful")
+    
+    
+    for i in range(3):
+        element = {
+            "id": i,
+            "velocity": random.randint(0, 10) + random.randint(0, 10)/10,
+            "day": day,
+            "timestamp": f"{random.randint(0, 23)}:{random.randint(0, 59)}:{random.randint(0, 59)}"
+        }
+        insert_create(conn, element, table_name)
+        print("Inserting element")
+else:
+    print("no connection established")
+print("DONE")
+conn.close()
+
+
+
 cursor = conn.cursor()
 cursor.execute("SELECT name FROM sqlite_master WHERE type='table';")
 tables = cursor.fetchall()
 table_names = [table[0] for table in tables]
 st.write(table_names)
+
+
+
+
+
 
 # repo.git.add(r"C:\Users\ACER\Desktop\testa\test_python\test.db")
 # repo.index.commit("pushed db")
