@@ -5,11 +5,12 @@ import streamlit as st
 
 
 # username= "SamVia"
-# password = 
-# remote = f"https://{username}:{password}@github.com/SamVia/test_python"
-
-# git.Repo.clone_from(remote, r"C:\Users\ACER\Desktop\testa\test_python\test")
-
+password = st.text_input("input text")
+remote = f"https://{username}:{password}@github.com/SamVia/test_python"
+try:
+    git.Repo.clone_from(remote, r"/mount/src/test_python/database")
+except:
+    pass
 
 def print_dir(basepath):
     with os.scandir(basepath) as entries:
