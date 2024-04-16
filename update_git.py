@@ -5,7 +5,7 @@ import sqlite3 as sq
 import random
 
 
-#repo = git.Repo(r"C:\Users\ACER\Desktop\testa\test_python")
+
 
 
 username= "SamVia"
@@ -124,13 +124,13 @@ conn.close()
 
 
 
+repo = git.Repo("/mount/src/test_python/database")
+repo.git.add("/mount/src/test_python/database/test.db")
+repo.index.commit("pushed db")
 
-# repo.git.add(r"C:\Users\ACER\Desktop\testa\test_python\test.db")
-# repo.index.commit("pushed db")
-
-# origin = repo.remote(name="origin")
-# origin.push()
-# print(os.path.realpath("test_python/test.tb"))
+origin = repo.remote(name="origin")
+origin.push()
+print(os.path.realpath("test_python/test.tb"))
 
 
 # import git
