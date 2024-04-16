@@ -14,16 +14,18 @@ import streamlit as st
 def print_dir(basepath):
     with os.scandir(basepath) as entries:
         for entry in entries:
+
             if entry.is_dir():
                 print(entry.name + " DIR")
-                st.write(entry.name + " DIR")
+                st.write(entry.path + " DIR")
                 print_dir(entry.path)
             else: 
                 print(entry.name + " FILE")
-                st.write(entry.name + " FILE")
+                st.write(entry.path + " FILE")
 
 # Example usage
 basepath = os.getcwd()
+st.write(f"basepath: {basepath}")
 print_dir(basepath)
 # repo.git.add(r"C:\Users\ACER\Desktop\testa\test_python\test.db")
 # repo.index.commit("pushed db")
