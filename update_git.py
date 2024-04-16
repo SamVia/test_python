@@ -23,6 +23,23 @@ def print_dir(basepath):
             else: 
                 print(entry.name + " FILE")
                 st.write(entry.path + " FILE")
+                if os.path.exists(entry.path):
+                    if os.access(entry.path, os.R_OK):
+                        print(f"Read permission is granted for '{entry.path}'.")
+                    else:
+                        print(f"Read permission is not granted for '{entry.path}'.")
+                    
+                    if os.access(entry.path, os.W_OK):
+                        print(f"Write permission is granted for '{entry.path}'.")
+                    else:
+                        print(f"Write permission is not granted for '{entry.path}'.")
+                    
+                    if os.access(entry.path, os.X_OK):
+                        print(f"Execute permission is granted for '{entry.path}'.")
+                    else:
+                        print(f"Execute permission is not granted for '{entry.path}'.")
+                else:
+                    print(f"The file '{entry.path}' does not exist.")
 
 # Example usage
 basepath = os.getcwd()
