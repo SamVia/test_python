@@ -127,13 +127,16 @@ conn.close()
 
 
 if st.button("commit"):
+    os.chdir("/mount/src/test_python/database")
     repo = git.Repo("/mount/src/test_python/database")
     repo.git.add("/mount/src/test_python/database/test.db")
     repo.index.commit("pushed db")
 
     origin = repo.remote(name="origin")
     origin.push()
+    os.chdir("/mount/src/test_python")
     print(os.path.realpath("test_python/test.tb"))
+    st.write("push done")
 
 
 # import git
