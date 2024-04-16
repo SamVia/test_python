@@ -1,6 +1,7 @@
 import git 
 import os
 import streamlit as st
+import sqlite3
 #repo = git.Repo(r"C:\Users\ACER\Desktop\testa\test_python")
 
 
@@ -47,6 +48,15 @@ st.write(f"basepath: {basepath}")
 print_dir(basepath)
 os.chmod("/mount/src/test_python/database/test.db", 0o777)
 st.write(os.access("/mount/src/test_python/database/test.db", os.X_OK))
+
+
+conn = sqlite3.connect("/mount/src/test_python/database/test.db")
+cursor = conn.cursor()
+cursor.execute("SELECT name FROM sqlite_master WHERE type='table';")
+tables = cursor.fetchall()
+table_names = [table[0] for table in tables]
+st.write(table_names)
+
 # repo.git.add(r"C:\Users\ACER\Desktop\testa\test_python\test.db")
 # repo.index.commit("pushed db")
 
