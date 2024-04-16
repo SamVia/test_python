@@ -8,13 +8,18 @@ import os
 # remote = f"https://{username}:{password}@github.com/SamVia/test_python"
 
 # git.Repo.clone_from(remote, r"C:\Users\ACER\Desktop\testa\test_python\test")
-basepath = os.getcwd()
+
+
 def print_dir(basepath):
     with os.scandir(basepath) as entries:
         for entry in entries:
             if entry.is_dir():
-                print(entry.name+" DIR:")
-                print_dir(f"{basepath}/{entry}")
+                print(entry.name + " DIR")
+                print_dir(entry.path)
+            else: print(entry.name + " FILE")
+
+# Example usage
+basepath = os.getcwd()
 print_dir(basepath)
 # repo.git.add(r"C:\Users\ACER\Desktop\testa\test_python\test.db")
 # repo.index.commit("pushed db")
