@@ -4,7 +4,7 @@ import streamlit as st
 #repo = git.Repo(r"C:\Users\ACER\Desktop\testa\test_python")
 
 
-# username= "SamVia"
+username= "SamVia"
 password = st.text_input("input text")
 remote = f"https://{username}:{password}@github.com/SamVia/test_python"
 try:
