@@ -110,7 +110,7 @@ if conn is not None:
 else:
     print("no connection established")
 print("DONE")
-conn.close()
+
 
 
 
@@ -119,7 +119,7 @@ cursor.execute("SELECT name FROM sqlite_master WHERE type='table';")
 tables = cursor.fetchall()
 table_names = [table[0] for table in tables]
 st.write(table_names)
-
+conn.close()
 
 
 
