@@ -1,5 +1,6 @@
 import git 
 import os
+import streamlit as st
 #repo = git.Repo(r"C:\Users\ACER\Desktop\testa\test_python")
 
 
@@ -15,8 +16,11 @@ def print_dir(basepath):
         for entry in entries:
             if entry.is_dir():
                 print(entry.name + " DIR")
+                st.write(entry.name + " DIR")
                 print_dir(entry.path)
-            else: print(entry.name + " FILE")
+            else: 
+                print(entry.name + " FILE")
+                st.write(entry.name + " FILE")
 
 # Example usage
 basepath = os.getcwd()
