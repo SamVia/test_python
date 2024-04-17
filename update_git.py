@@ -3,6 +3,7 @@ import os
 import streamlit as st
 import sqlite3 as sq
 import random
+import subprocess
 
 
 
@@ -10,11 +11,13 @@ import random
 
 username= "SamVia"
 password = st.text_input("input text")
-remote = f"https://{username}:{password}@github.com/SamVia/test_python"
+remote = f"https://{username}:{password}@github.com/SamVia/test_python.git"
 try:
-    git.Repo.clone_from(remote, r"/mount/src/test_python/database")
-except:
-    pass
+    subprocess.check_call(["git", "clone", remote, "/mount/src/test_python/database"])
+    subprocess.check_call(["git", "config", "user.name", "Your Name"])
+    subprocess.check_call(["git", "config", "user.email", "you@example.com"])
+except subprocess.CalledProcessError as e:
+    print(f"An error occurred: {str(e)}")
 
 def print_dir(basepath):
     with os.scandir(basepath) as entries:
@@ -48,7 +51,7 @@ def print_dir(basepath):
 # Example usage
 basepath = os.getcwd()
 st.write(f"basepath: {basepath}")
-print_dir(basepath)
+#print_dir(basepath)
 os.chmod("/mount/src/test_python/database/test.db", 0o777)
 st.write(os.access("/mount/src/test_python/database/test.db", os.X_OK))
 
@@ -127,16 +130,19 @@ conn.close()
 
 
 if st.button("commit"):
-    os.chdir("/mount/src/test_python/database")
-    repo = git.Repo("/mount/src/test_python/database")
-    repo.git.add("/mount/src/test_python/database/test.db")
-    repo.index.commit("pushed db")
-
-    origin = repo.remote(name="origin")
-    origin.push()
-    os.chdir("/mount/src/test_python")
-    print(os.path.realpath("test_python/test.tb"))
-    st.write("push done")
+    try:
+        os.chdir("/mount/src/test_python/database")
+        subprocess.check_call(["git", "config", "user.name", "SamVia"])
+        subprocess.check_call(["git", "config", "user.email", "samuele@gmail.com"])
+        #repo = git.Repo("/mount/src/test_python/database")
+        subprocess.check_call(["git", "add", "test.db"])
+        subprocess.check_call(["git", "commit", "-m", "commit from streamlit"])
+        subprocess.check_call(["git", "push"])
+        os.chdir("/mount/src/test_python")
+        print(os.path.realpath("test_python/test.tb"))
+        st.write("push done")
+    except subprocess.CalledProcessError as e:
+        st.write(f"An error occurred: {str(e)}")
 
 
 # import git
