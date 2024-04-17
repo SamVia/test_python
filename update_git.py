@@ -3,6 +3,7 @@ import os
 import streamlit as st
 import sqlite3 as sq
 import random
+import subprocess
 
 
 
@@ -10,7 +11,7 @@ import random
 
 username= "SamVia"
 password = st.text_input("input text")
-remote = f"https://{username}:{password}@github.com/SamVia/test_python"
+remote = f"https://{username}:{password}@github.com/SamVia/test_python.git"
 try:
     git.Repo.clone_from(remote, r"/mount/src/test_python/database")
 except:
@@ -129,7 +130,7 @@ conn.close()
 if st.button("commit"):
     os.chdir("/mount/src/test_python/database")
     repo = git.Repo("/mount/src/test_python/database")
-    repo.git.add("/mount/src/test_python/database/test.db")
+    repo.git.add("/mount/src/test_python/database/test.db",)
     repo.index.commit("pushed db")
 
     origin = repo.remote(name="origin")
