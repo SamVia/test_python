@@ -129,7 +129,7 @@ conn.close()
 
 if st.button("commit"):
     os.chdir("/mount/src/test_python/database")
-    repo = git.Repo("/mount/src/test_python/database")
+    #repo = git.Repo("/mount/src/test_python/database")
     subprocess.check_call(["git", "add", "test.db"])
     subprocess.check_call(["git", "commit", "-m", "commit from streamlit"])
     subprocess.check_call(["git", "push"])
