@@ -4,10 +4,10 @@ import sqlite3 as sq
 import random
 import base64
 from github import Github
-try:
-    g = Github("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")
-except:
-    pass
+word = st.text_input("test")
+g = Github(word)
+
+
 # Then get the specific repo
 repo = g.get_user().get_repo("test_python")
 
