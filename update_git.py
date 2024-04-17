@@ -6,13 +6,13 @@ import base64
 from github import Github
 import git
 
-os.chdir("/mount/src/test_python/database")
+
 repo_dir = "/mount/src/test_python/database"
 username = "SamVia"
 password = "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"
 remote = f"https://{username}:{password}@github.com/some-account/some-repo.git"
 
-
+os.chdir("/mount/src/test_python/database")
 repo = git.Repo(repo_dir)
 
 
