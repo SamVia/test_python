@@ -12,7 +12,7 @@ username = "SamVia"
 password = "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"
 remote = f"https://{username}:{password}@github.com/some-account/some-repo.git"
 
-os.chdir("/mount/src/test_python/database")
+
 repo = git.Repo(repo_dir)
 
 
@@ -26,7 +26,7 @@ else:
     st.write("cloning")
     r = git.Repo.clone_from(remote, repo_dir, branch='master', auth=("token", password))
 
-
+os.chdir("/mount/src/test_python/database")
 word = st.text_input("test")
 g = Github(word)
 
