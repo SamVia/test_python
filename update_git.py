@@ -14,6 +14,8 @@ password = st.text_input("input text")
 remote = f"https://{username}:{password}@github.com/SamVia/test_python.git"
 try:
     subprocess.check_call(["git", "clone", remote, "/mount/src/test_python/database"])
+    subprocess.check_call(["git", "config", "user.name", "Your Name"])
+    subprocess.check_call(["git", "config", "user.email", "you@example.com"])
 except subprocess.CalledProcessError as e:
     print(f"An error occurred: {str(e)}")
 
