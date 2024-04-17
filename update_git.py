@@ -4,6 +4,29 @@ import sqlite3 as sq
 import random
 import base64
 from github import Github
+import git
+
+os.chdir("/mount/src/test_python/database")
+repo_dir = "/mount/src/test_python/database"
+username = "SamVia"
+password = "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"
+remote = f"https://{username}:{password}@github.com/some-account/some-repo.git"
+
+
+repo = git.Repo(repo_dir)
+
+
+if os.path.isdir(repo_dir):
+    # If the directory already exists, just pull the changes
+    st.write("pulling")
+    
+    repo = repo.remotes.origin.pull()
+else:
+    #If the directory doesn't exist, clone the repository
+    st.write("cloning")
+    r = git.Repo.clone_from(remote, repo_dir, branch='master', auth=("token", password))
+
+
 word = st.text_input("test")
 g = Github(word)
 
