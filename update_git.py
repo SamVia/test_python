@@ -51,7 +51,7 @@ def print_dir(basepath):
 # Example usage
 basepath = os.getcwd()
 st.write(f"basepath: {basepath}")
-print_dir(basepath)
+#print_dir(basepath)
 os.chmod("/mount/src/test_python/database/test.db", 0o777)
 st.write(os.access("/mount/src/test_python/database/test.db", os.X_OK))
 
@@ -132,6 +132,8 @@ conn.close()
 if st.button("commit"):
     try:
         os.chdir("/mount/src/test_python/database")
+        subprocess.check_call(["git", "config", "user.name", "Your Name"])
+        subprocess.check_call(["git", "config", "user.email", "you@example.com"])
         #repo = git.Repo("/mount/src/test_python/database")
         subprocess.check_call(["git", "add", "test.db"])
         subprocess.check_call(["git", "commit", "-m", "commit from streamlit"])
