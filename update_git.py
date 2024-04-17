@@ -6,26 +6,26 @@ import base64
 from github import Github
 import git
 
-
+word = st.text_input("test")
 repo_dir = "/mount/src/test_python/database"
 username = "SamVia"
-password = "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"
-remote = f"https://{username}:{password}@github.com/some-account/some-repo.git"
+
+remote = f"https://{username}:{word}@github.com/some-account/some-repo.git"
 
 
-repo = git.Repo(repo_dir)
+
 
 
 if os.path.isdir(repo_dir):
     # If the directory already exists, just pull the changes
     st.write("pulling")
-    
-    repo = repo.remotes.origin.pull()
+    repo = git.Repo(repo_dir)
+    repo.remotes.origin.pull()
 else:
     #If the directory doesn't exist, clone the repository
     st.write("cloning")
-    r = git.Repo.clone_from(remote, repo_dir, branch='master', auth=("token", password))
-
+    git.Repo.clone_from("https://github.com/SamVia/test_python.git", repo_dir, branch='master', depth=1, auth=("token", word))
+    repo = git.Repo(repo_dir)
 os.chdir("/mount/src/test_python/database")
 word = st.text_input("test")
 g = Github(word)
