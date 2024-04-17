@@ -13,9 +13,9 @@ username= "SamVia"
 password = st.text_input("input text")
 remote = f"https://{username}:{password}@github.com/SamVia/test_python.git"
 try:
-    git.Repo.clone_from(remote, r"/mount/src/test_python/database")
-except:
-    pass
+    subprocess.check_call(["git", "clone", remote, "/mount/src/test_python/database"])
+except subprocess.CalledProcessError as e:
+    print(f"An error occurred: {str(e)}")
 
 def print_dir(basepath):
     with os.scandir(basepath) as entries:
