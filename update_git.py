@@ -132,8 +132,8 @@ conn.close()
 if st.button("commit"):
     try:
         os.chdir("/mount/src/test_python/database")
-        subprocess.check_call(["git", "config", "user.name", "Your Name"])
-        subprocess.check_call(["git", "config", "user.email", "you@example.com"])
+        subprocess.check_call(["git", "config", "user.name", "SamVia"])
+        subprocess.check_call(["git", "config", "user.email", "samuele@gmail.com"])
         #repo = git.Repo("/mount/src/test_python/database")
         subprocess.check_call(["git", "add", "test.db"])
         subprocess.check_call(["git", "commit", "-m", "commit from streamlit"])
