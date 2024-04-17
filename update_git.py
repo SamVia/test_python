@@ -1,23 +1,34 @@
-import git 
 import os
 import streamlit as st
 import sqlite3 as sq
 import random
-import subprocess
-
-
-
-
-
-username= "SamVia"
-password = st.text_input("input text")
-remote = f"https://{username}:{password}@github.com/SamVia/test_python.git"
+import base64
+from github import Github
 try:
-    subprocess.check_call(["git", "clone", remote, "/mount/src/test_python/database"])
-    subprocess.check_call(["git", "config", "user.name", "Your Name"])
-    subprocess.check_call(["git", "config", "user.email", "you@example.com"])
-except subprocess.CalledProcessError as e:
-    print(f"An error occurred: {str(e)}")
+    g = Github("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")
+except:
+    pass
+# Then get the specific repo
+repo = g.get_user().get_repo("test_python")
+
+# Get the ref for the file
+contents = repo.get_contents("test.db")
+
+
+
+os.chdir("/mount/src/test_python/database")
+
+
+
+
+
+
+# try:
+#     subprocess.check_call(["git", "clone", remote, "/mount/src/test_python/database"])
+#     subprocess.check_call(["git", "config", "user.name", "Your Name"])
+#     subprocess.check_call(["git", "config", "user.email", "you@example.com"])
+# except subprocess.CalledProcessError as e:
+#     print(f"An error occurred: {str(e)}")
 
 def print_dir(basepath):
     with os.scandir(basepath) as entries:
@@ -53,6 +64,7 @@ basepath = os.getcwd()
 st.write(f"basepath: {basepath}")
 #print_dir(basepath)
 os.chmod("/mount/src/test_python/database/test.db", 0o777)
+os.chmod("/mount/src/test_python/database", 0o777)
 st.write(os.access("/mount/src/test_python/database/test.db", os.X_OK))
 
 
@@ -115,10 +127,6 @@ if conn is not None:
         print("Inserting element")
 else:
     print("no connection established")
-print("DONE")
-
-
-
 
 cursor = conn.cursor()
 cursor.execute("SELECT name FROM sqlite_master WHERE type='table';")
@@ -127,60 +135,17 @@ table_names = [table[0] for table in tables]
 st.write(table_names)
 conn.close()
 
-
-
 if st.button("commit"):
     try:
-        os.chdir("/mount/src/test_python/database")
-        subprocess.check_call(["git", "config", "user.name", "SamVia"])
-        subprocess.check_call(["git", "config", "user.email", "samuele@gmail.com"])
-        #repo = git.Repo("/mount/src/test_python/database")
-        subprocess.check_call(["git", "add", "test.db"])
-        subprocess.check_call(["git", "commit", "-m", "commit from streamlit"])
-        subprocess.check_call(["git", "push"])
-        os.chdir("/mount/src/test_python")
-        print(os.path.realpath("test_python/test.tb"))
-        st.write("push done")
-    except subprocess.CalledProcessError as e:
-        st.write(f"An error occurred: {str(e)}")
+        with open("/mount/src/test_python/database/test.db", "rb") as file:
+            content = file.read()
+            content_encoded = base64.b64encode(content)
+    except:
+        pass
+    try:
+        repo.update_file(path=contents.path, message="<commit_message>", content=content_encoded.decode(), sha=contents.sha)
+        print("File updated successfully.")
+    except: pass
+os.chdir("/mount/src/test_python")
 
-
-# import git
-# import os
-# import traceback
-
-# def push_db_file_to_repo(file_path, commit_message, github_username, github_pat):
-#     try:
-#         # Get the current working directory
-#         repo_path = os.path.realpath(r"test_python")
-
-#         # Open the repository
-#         repo = git.Repo(repo_path)
-
-#         # Stage the file for commit
-#         repo.index.add([file_path])
-
-#         # Commit the changes
-#         repo.index.commit(commit_message)
-
-#         # Push the changes to GitHub with credentials in URL
-#         origin = repo.remote(name='origin')
-#         origin_url = origin.config_reader.get("url")
-#         url_with_credentials = origin_url.replace("://", f"://{github_username}:{github_pat}@")
-#         origin.push(refspec='HEAD', progress=True, auth=(github_username, github_pat), url=url_with_credentials)
-
-#         print(f"File '{file_path}' pushed to GitHub successfully.")
-#     except Exception as e:
-#         print(f"An error occurred: {e}")
-#         traceback.print_exc()  # Print full traceback
-
-# # Example usage
-# file_path = r"C:\Users\ACER\Desktop\testa\test_python\test.db"
-# commit_message = 'Added test.tb'
-# github_username = 'SamVia'
-# github_pat = 
-
-# # # password = ""
-# # # remote = f"https://{username}:{password}@github.com/SamVia/test_python"
-
-# push_db_file_to_repo(file_path, commit_message, github_username, github_pat)
+g.close()
