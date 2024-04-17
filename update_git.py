@@ -128,14 +128,17 @@ conn.close()
 
 
 if st.button("commit"):
-    os.chdir("/mount/src/test_python/database")
-    #repo = git.Repo("/mount/src/test_python/database")
-    subprocess.check_call(["git", "add", "test.db"])
-    subprocess.check_call(["git", "commit", "-m", "commit from streamlit"])
-    subprocess.check_call(["git", "push"])
-    os.chdir("/mount/src/test_python")
-    print(os.path.realpath("test_python/test.tb"))
-    st.write("push done")
+    try:
+        os.chdir("/mount/src/test_python/database")
+        #repo = git.Repo("/mount/src/test_python/database")
+        subprocess.check_call(["git", "add", "test.db"])
+        subprocess.check_call(["git", "commit", "-m", "commit from streamlit"])
+        subprocess.check_call(["git", "push"])
+        os.chdir("/mount/src/test_python")
+        print(os.path.realpath("test_python/test.tb"))
+        st.write("push done")
+    except subprocess.CalledProcessError as e:
+        st.write(f"An error occurred: {str(e)}")
 
 
 # import git
