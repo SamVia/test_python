@@ -25,7 +25,7 @@ try:
     else:
         #If the directory doesn't exist, clone the repository
         st.write("cloning")
-        git.Repo.clone_from("https://github.com/SamVia/test_python.git", repo_dir, branch='master', depth=1, auth=("token", word))
+        git.Repo.clone_from(remote, repo_dir)
         repo = git.Repo(repo_dir)
 except git.GitError as e: st.write(e)
 
