@@ -2,44 +2,47 @@ import os
 import streamlit as st
 import sqlite3 as sq
 import random
-import base64
-from github import Github
+#import base64
+#from github import Github
 import git
 
-word = st.text_input("test")
+
+if "update" not in st.session_state:
+    st.session_state.update = False
+
+
+word = st.text_input("test", key="test")
 repo_dir = "/mount/src/test_python/database"
 username = "SamVia"
 
 remote = f"https://{username}:{word}@github.com/some-account/some-repo.git"
+try:
+    if os.path.isdir(repo_dir):
+        # If the directory already exists, just pull the changes
+        st.write("pulling")
+        repo = git.Repo(repo_dir)
+        repo.remotes.origin.pull()
+    else:
+        #If the directory doesn't exist, clone the repository
+        st.write("cloning")
+        git.Repo.clone_from("https://github.com/SamVia/test_python.git", repo_dir, branch='master', depth=1, auth=("token", word))
+        repo = git.Repo(repo_dir)
+except git.GitError as e: st.write(e)
 
-
-
-
-
-if os.path.isdir(repo_dir):
-    # If the directory already exists, just pull the changes
-    st.write("pulling")
-    repo = git.Repo(repo_dir)
-    repo.remotes.origin.pull()
-else:
-    #If the directory doesn't exist, clone the repository
-    st.write("cloning")
-    git.Repo.clone_from("https://github.com/SamVia/test_python.git", repo_dir, branch='master', depth=1, auth=("token", word))
-    repo = git.Repo(repo_dir)
-os.chdir("/mount/src/test_python/database")
-word = st.text_input("test")
-g = Github(word)
+#g = Github(word)
 
 
 # Then get the specific repo
-repo = g.get_user().get_repo("test_python")
+#repo = g.get_user().get_repo("test_python")
 
 # Get the ref for the file
-contents = repo.get_contents("test.db")
+#contents = repo.get_contents("test.db")
+
+if st.button("update", key ="update"):
+    st.session_state.update = True
 
 
 
-os.chdir("/mount/src/test_python/database")
 
 
 
@@ -133,7 +136,7 @@ db = r"/mount/src/test_python/database/test.db"
 conn = create_connection(db)
 
 
-if conn is not None:
+if conn is not None and update:
     table = generate_str_table(table_name)
     create_table(conn, table)
     print("connection successful")
@@ -148,6 +151,7 @@ if conn is not None:
         }
         insert_create(conn, element, table_name)
         print("Inserting element")
+    st.session_state.update = False
 else:
     print("no connection established")
 
@@ -158,17 +162,21 @@ table_names = [table[0] for table in tables]
 st.write(table_names)
 conn.close()
 
-if st.button("commit"):
-    try:
-        with open("/mount/src/test_python/database/test.db", "rb") as file:
-            content = file.read()
-            content_encoded = base64.b64encode(content)
-    except:
-        pass
-    try:
-        repo.update_file(path=contents.path, message="<commit_message>", content=content_encoded.decode(), sha=contents.sha)
-        print("File updated successfully.")
-    except: pass
-os.chdir("/mount/src/test_python")
+# if st.button("commit"):
+#     try:
+#         with open("/mount/src/test_python/database/test.db", "rb") as file:
+#             content = file.read()
+#             content_encoded = base64.b64encode(content)
+#     except:
+#         pass
+#     try:
+#         repo.update_file(path=contents.path, message="<commit_message>", content=content_encoded.decode(), sha=contents.sha)
+#         print("File updated successfully.")
+#     except: pass
+# os.chdir("/mount/src/test_python")
 
-g.close()
+# g.close()
+
+
+st.download_button("Download Database", file_name="test.db", key="download")
+st.download_button("Download instructions", file_name="Instructions.txt", key="help")
