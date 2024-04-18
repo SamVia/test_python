@@ -38,7 +38,7 @@ except git.GitError as e: st.write(e)
 # Get the ref for the file
 #contents = repo.get_contents("test.db")
 
-if st.button("update", key ="update"):
+if st.button("update", key ="update_button"):
     st.session_state.update = True
 
 
@@ -136,7 +136,7 @@ db = r"/mount/src/test_python/database/test.db"
 conn = create_connection(db)
 
 
-if conn is not None and update:
+if conn is not None and st.session_state.update:
     table = generate_str_table(table_name)
     create_table(conn, table)
     print("connection successful")
