@@ -195,15 +195,13 @@ from datetime import datetime
 import json
 from google.oauth2 import service_account
 
-key = st.secrets["key"]
-db = firestore.Client.from_service_account_json(key)
 timed = datetime.now()
 print(f"{timed.hour}:{timed.minute}:{timed.second}:{round(timed.microsecond/1000)}")
 
 #use caching to avoid establishing the connection every rerun of the app
 @st.cache_resource
 def connect_to_db():
-	key_dict = json.loads(st.secrets["textkey"])
+	key_dict = json.loads(st.secrets["key"])
 	creds = service_account.Credentials.from_service_account_info(key_dict,)
 	credentials = firestore.Client(credentials=creds)
 	return credentials
