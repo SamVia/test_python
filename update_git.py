@@ -208,19 +208,30 @@ def connect_to_db():
 
 db = connect_to_db()
 
+if 'run_button' in st.session_state and st.session_state.run_button == True:
+    st.session_state.running = True
+else:
+    st.session_state.running = False
+
+
 
 """press the button to start the stream of data!
 """
-if st.button("start", key = "start_stream"):
-    for i in range(0, 3000):
-        timed = datetime.now()
-        
-        
-        doc_ref = db.collection(f"_{timed.year}_{timed.month}_{timed.day}").document(str(timed.time()))
-        doc_ref.set({
-            "id":i,
-            "velocity": randint(0,100)+randint(0,10)/10,
-            "day": f"{timed.day}",
-            "timestamp": f"{timed.hour}:{timed.minute}:{timed.second}:{round(timed.microsecond/1000)}"
-        })
-        time.sleep(0.3)
+
+if st.button('Start data stream', disabled=st.session_state.running, key='run_button'):
+    with st.spinner("sending data"):
+        status = st.progress(0)
+        for i in range(0, 3):
+            timed = datetime.now()
+            doc_ref = db.collection(f"_{timed.year}_{timed.month}_{timed.day}").document(str(timed.time()))
+            doc_ref.set({
+                "id":i+1,
+                "velocity": randint(0,100)+randint(0,10)/10,
+                "day": f"{timed.day}",
+                "timestamp": f"{timed.hour}:{timed.minute}:{timed.second}:{round(timed.microsecond/1000)}"
+            })
+            status.progress((i+1)/300)
+            time.sleep(0.3)
+    st.success("data sent!")
+    st.session_state.start_stream = True
+    st.button("rerun")
