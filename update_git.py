@@ -187,32 +187,29 @@
 
 # g.close()
 
-
 import streamlit as st
-hide_st_style = """
-    <style>
-    footer {visibility: hidden;}
-    header {visibility:hidden;}
-    </stile>
-"""
-st.markdown(hide_st_style, unsafe_allow_html=True)
-link = "https://github.com/SamVia/test_python/blob/main/combined_image.png?raw=true"
-img_back=f"""
-<style>
-[data-testid="stAppViewContainer"] > .main {{
-background-image: url({link});
-background-size: 100% auto;
-background-position: center center;
-background-repeat: no-repeat;
-background-attachment: local;
-overflow-y:auto;
-}}
-[data-testid="stHeader"] {{
-background: rgba(0,0,0,0);
-}}
-</style>
-"""
+from google.cloud import firestore
+import time
+from random import randint
+from datetime import datetime
+key = st.secrets["key"]
+db = firestore.Client.from_service_account_json(key)
+timed = datetime.now()
+print(f"{timed.hour}:{timed.minute}:{timed.second}:{round(timed.microsecond/1000)}")
 
-st.markdown(img_back,unsafe_allow_html=True)
-for _ in range(524):
-    st.write("\n")
+
+"""press the button to start the stream of data!
+"""
+if st.button("start", key = "start_stream"):
+    for i in range(0, 3000):
+        timed = datetime.now()
+        
+        
+        doc_ref = db.collection(f"_{timed.year}_{timed.month}_{timed.day}").document(str(timed.time()))
+        doc_ref.set({
+            "id":i,
+            "velocity": randint(0,100)+randint(0,10)/10,
+            "day": f"{timed.day}",
+            "timestamp": f"{timed.hour}:{timed.minute}:{timed.second}:{round(timed.microsecond/1000)}"
+        })
+        time.sleep(0.3)
