@@ -221,7 +221,7 @@ else:
 if st.button('Start data stream', disabled=st.session_state.running, key='run_button'):
     with st.spinner("sending data"):
         status = st.progress(0)
-        for i in range(0, 3):
+        for i in range(0, 3000):
             timed = datetime.now()
             doc_ref = db.collection(f"_{timed.year}_{timed.month}_{timed.day}").document(str(timed.time()))
             doc_ref.set({
